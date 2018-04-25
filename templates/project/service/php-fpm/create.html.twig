@@ -198,6 +198,7 @@
         <hr class="my-6" />
 
         {% set iniXdebug = serviceType.meta('ini-xdebug') %}
+        {% set iniXdebugCli = serviceType.meta('ini-xdebug-cli') %}
         <h4 class="mb-3">Additional Tools</h4>
         <div class="row">
             <div class="col">
@@ -267,13 +268,25 @@
 
                         <div class="row">
                             <div class="col">
-                                <pre class="language-ini" data-code-highlight><code
+                                <pre class="language-ini short" data-code-highlight><code
                                         contenteditable autocorrect="off" autocapitalize="off"
                                         spellcheck="false"
                                         id="xdebug-ini">{{ iniXdebug.data|first }}</code></pre>
                                 <input type="hidden" value="" name="xdebug[ini]"
                                        data-error-container="additional-tools"
                                        data-get-value-source="xdebug-ini" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <pre class="language-ini short" data-code-highlight><code
+                                        contenteditable autocorrect="off" autocapitalize="off"
+                                        spellcheck="false"
+                                        id="xdebug-cli_ini">{{ iniXdebugCli.data|first }}</code></pre>
+                                <input type="hidden" value="" name="xdebug[cli_ini]"
+                                       data-error-container="additional-tools"
+                                       data-get-value-source="xdebug-cli_ini" />
                             </div>
                         </div>
                     </div>
