@@ -151,27 +151,27 @@
                 <div class="selectgroup" role="tablist">
                     <label class="selectgroup-item">
                         <input type="radio" class="selectgroup-input"
-                               id="credential_store-secret" name="credential_store"
-                               value="secret" checked role="tab"
-                               data-toggle="radio-tab" data-target="#credentials-secret-tab"
-                               data-error-container="credential_store" />
+                               id="secret_store-docker" name="secret_store"
+                               value="docker" checked role="tab"
+                               data-toggle="radio-tab" data-target="#secret_docker-tab"
+                               data-error-container="secret_store" />
                         <span class="selectgroup-button selectgroup-button-icon px-7 py-3">
                             <i class="fe fe-anchor"></i> Docker Secrets</span>
                     </label>
 
                     <label class="selectgroup-item">
                         <input type="radio" class="selectgroup-input"
-                               id="credential_store-plaintext" name="credential_store"
+                               id="secret_store-plaintext" name="secret_store"
                                value="plaintext" role="tab"
-                               data-toggle="radio-tab" data-target="#credentials-plaintext-tab"
-                               data-error-container="credential_store" />
+                               data-toggle="radio-tab" data-target="#secret_plaintext-tab"
+                               data-error-container="secret_store" />
                         <span class="selectgroup-button selectgroup-button-icon px-7 py-3">
                             <i class="fe fe-file-text"></i> Plain Text</span>
                     </label>
                 </div>
 
-                <div id="nav-credentials-content" class="tab-content">
-                    <div id="credentials-secret-tab" role="tabpanel"
+                <div id="nav-secret-content" class="tab-content">
+                    <div id="secret_docker-tab" role="tabpanel"
                          class="tab-pane show active">
                         <div class="row form-group">
                             <div class="col">
@@ -187,26 +187,28 @@
                             <div class="row">
                                 <div class="col-12 col-xl form-group">
                                     <label class="form-label"
-                                           for="secret-mysql_root_password-name">Root Password Secret Name</label>
+                                           for="secret_docker-mysql_root_password-name">Root Password Secret Name</label>
                                     <input type="text" class="form-control" maxlength="64"
-                                           id="secret-mysql_root_password-name" name="secret[mysql_root_password][name]"
-                                           placeholder="" value="" required
-                                           data-update-text="secret-mysql_root_password-name-label"
-                                           data-error-container="secret-mysql_root_password" />
+                                           id="secret_docker-mysql_root_password-name"
+                                           name="secret_docker[mysql_root_password][name]"
+                                           placeholder="" value="{{ secret_docker.mysql_root_password.name }}"
+                                           data-update-text="secret_docker-mysql_root_password-name-label"
+                                           data-error-container="secret_docker-mysql_root_password" />
                                     <small class="text-muted">
                                         Will be available to services at
-                                        <code>/run/secrets/<span
-                                                id="secret-mysql_root_password-name-label">db_root_password</span></code>
+                                        <code>/run/secrets/<span id="secret_docker-mysql_root_password-name-label"
+                                            >{{ secret_docker.mysql_root_password.name }}</span></code>
                                     </small>
                                 </div>
 
                                 <div class="col-12 col-xl form-group">
                                     <label class="form-label"
-                                           for="secret-mysql_root_password">Root Password</label>
+                                           for="secret_docker-mysql_root_password">Root Password</label>
                                     <input type="text" class="form-control" maxlength="64"
-                                           id="secret-mysql_root_password" name="secret[mysql_root_password][value]"
-                                           placeholder="" value="" required
-                                           data-error-container="secret-mysql_root_password" />
+                                           id="secret_docker-mysql_root_password"
+                                           name="secret_docker[mysql_root_password][value]"
+                                           placeholder="" value=""
+                                           data-error-container="secret_docker-mysql_root_password" />
                                     <small class="text-muted">
                                         Password for the <code>root</code> user.
                                     </small>
@@ -216,7 +218,7 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="invalid-feedback"
-                                         data-error-container-name="secret-mysql_root_password"></div>
+                                         data-error-container-name="secret_docker-mysql_root_password"></div>
                                 </div>
                             </div>
                         </fieldset>
@@ -225,26 +227,28 @@
                             <div class="row">
                                 <div class="col-12 col-xl form-group">
                                     <label class="form-label"
-                                           for="secret-mysql_database-name">Database Secret Name</label>
+                                           for="secret_docker-mysql_database-name">Database Secret Name</label>
                                     <input type="text" class="form-control" maxlength="64"
-                                           id="secret-mysql_database-name" name="secret[mysql_database][name]"
-                                           placeholder="" value="" required
-                                           data-update-text="secret-mysql_database-name-label"
-                                           data-error-container="secret-mysql_database" />
+                                           id="secret_docker-mysql_database-name"
+                                           name="secret_docker[mysql_database][name]"
+                                           placeholder="" value="{{ secret_docker.mysql_database.name }}"
+                                           data-update-text="secret_docker-mysql_database-name-label"
+                                           data-error-container="secret_docker-mysql_database" />
                                     <small class="text-muted">
                                         Will be available to services at
-                                        <code>/run/secrets/<span
-                                                id="secret-mysql_database-name-label">mysql_database</span></code>
+                                        <code>/run/secrets/<span id="secret_docker-mysql_database-name-label"
+                                            >{{ secret_docker.mysql_database.name }}</span></code>
                                     </small>
                                 </div>
 
                                 <div class="col-12 col-xl form-group">
                                     <label class="form-label"
-                                           for="secret-mysql_database-value">Database</label>
+                                           for="secret_docker-mysql_database-value">Database</label>
                                     <input type="text" class="form-control" maxlength="64"
-                                           id="secret-mysql_database-value" name="secret[mysql_database][value]"
-                                           placeholder="" value="" required
-                                           data-error-container="secret-mysql_database" />
+                                           id="secret_docker-mysql_database-value"
+                                           name="secret_docker[mysql_database][value]"
+                                           placeholder="" value=""
+                                           data-error-container="secret_docker-mysql_database" />
                                     <small class="text-muted">
                                         Database to create on init.
                                     </small>
@@ -254,7 +258,7 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="invalid-feedback"
-                                         data-error-container-name="secret-mysql_database"></div>
+                                         data-error-container-name="secret_docker-mysql_database"></div>
                                 </div>
                             </div>
                         </fieldset>
@@ -263,26 +267,27 @@
                             <div class="row">
                                 <div class="col-12 col-xl form-group">
                                     <label class="form-label"
-                                           for="secret-mysql_user-name">User Secret Name</label>
+                                           for="secret_docker-mysql_user-name">User Secret Name</label>
                                     <input type="text" class="form-control" maxlength="64"
-                                           id="secret-mysql_user-name" name="secret[mysql_user][name]"
-                                           placeholder="" value="" required
-                                           data-update-text="secret-mysql_user-name-label"
-                                           data-error-container="secret-mysql_user" />
+                                           id="secret_docker-mysql_user-name" name="secret_docker[mysql_user][name]"
+                                           placeholder="" value="{{ secret_docker.mysql_user.name }}"
+                                           data-update-text="secret_docker-mysql_user-name-label"
+                                           data-error-container="secret_docker-mysql_user" />
                                     <small class="text-muted">
                                         Will be available to services at
-                                        <code>/run/secrets/<span
-                                                id="secret-mysql_user-name-label">mysql_user</span></code>
+                                        <code>/run/secrets/<span id="secret_docker-mysql_user-name-label"
+                                            >{{ secret_docker.mysql_user.name }}</span></code>
                                     </small>
                                 </div>
 
                                 <div class="col-12 col-xl form-group">
                                     <label class="form-label"
-                                           for="secret-mysql_user-value">User</label>
+                                           for="secret_docker-mysql_user-value">User</label>
                                     <input type="text" class="form-control" maxlength="64"
-                                           id="secret-mysql_user-value" name="secret[mysql_user][value]"
-                                           placeholder="" value="" required
-                                           data-error-container="secret-mysql_user" />
+                                           id="secret_docker-mysql_user-value"
+                                           name="secret_docker[mysql_user][value]"
+                                           placeholder="" value=""
+                                           data-error-container="secret_docker-mysql_user" />
                                     <small class="text-muted">
                                         Non-root user.
                                     </small>
@@ -292,7 +297,7 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="invalid-feedback"
-                                         data-error-container-name="secret-mysql_user"></div>
+                                         data-error-container-name="secret_docker-mysql_user"></div>
                                 </div>
                             </div>
                         </fieldset>
@@ -301,26 +306,28 @@
                             <div class="row">
                                 <div class="col-12 col-xl form-group">
                                     <label class="form-label"
-                                           for="secret-mysql_password-name">User Password Secret Name</label>
+                                           for="secret_docker-mysql_password-name">User Password Secret Name</label>
                                     <input type="text" class="form-control" maxlength="64"
-                                           id="secret-mysql_password-name" name="secret[mysql_password][name]"
-                                           placeholder="" value="" required
-                                           data-update-text="secret-mysql_password-name-label"
-                                           data-error-container="secret-mysql_password" />
+                                           id="secret_docker-mysql_password-name"
+                                           name="secret_docker[mysql_password][name]"
+                                           placeholder="" value="{{ secret_docker.mysql_password.name }}"
+                                           data-update-text="secret_docker-mysql_password-name-label"
+                                           data-error-container="secret_docker-mysql_password" />
                                     <small class="text-muted">
                                         Will be available to services at
-                                        <code>/run/secrets/<span
-                                                id="secret-mysql_password-name-label">mysql_password</span></code>
+                                        <code>/run/secrets/<span id="secret_docker-mysql_password-name-label"
+                                            >{{ secret_docker.mysql_password.name }}</span></code>
                                     </small>
                                 </div>
 
                                 <div class="col-12 col-xl form-group">
                                     <label class="form-label"
-                                           for="secret-mysql_password-value">User Password</label>
+                                           for="secret_docker-mysql_password-value">User Password</label>
                                     <input type="text" class="form-control" maxlength="64"
-                                           id="secret-mysql_password-value" name="secret[mysql_password][value]"
-                                           placeholder="" value="" required
-                                           data-error-container="secret-mysql_password" />
+                                           id="secret_docker-mysql_password-value"
+                                           name="secret_docker[mysql_password][value]"
+                                           placeholder="" value=""
+                                           data-error-container="secret_docker-mysql_password" />
                                     <small class="text-muted">
                                         Password for user.
                                     </small>
@@ -330,13 +337,13 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="invalid-feedback"
-                                         data-error-container-name="secret-mysql_password"></div>
+                                         data-error-container-name="secret_docker-mysql_password"></div>
                                 </div>
                             </div>
                         </fieldset>
                     </div>
 
-                    <div id="credentials-plaintext-tab" role="tabpanel"
+                    <div id="secret_plaintext-tab" role="tabpanel"
                          class="tab-pane">
                         <div class="row form-group">
                             <div class="col">
@@ -351,13 +358,14 @@
                         <div class="row">
                             <div class="col-12 col-xl form-group">
                                 <label class="form-label"
-                                       for="mysql_root_password">Root Password</label>
+                                       for="secret_plaintext-mysql_root_password">Root Password</label>
                                 <input type="text" class="form-control" maxlength="64"
-                                       id="mysql_root_password" name="mysql_root_password" placeholder=""
-                                       value="" required
-                                       data-error-container="mysql_root_password" />
+                                       id="secret_plaintext-mysql_root_password"
+                                       name="secret_plaintext[mysql_root_password]" placeholder=""
+                                       value=""
+                                       data-error-container="secret_plaintext-mysql_root_password" />
                                 <div class="invalid-feedback"
-                                     data-error-container-name="mysql_root_password"></div>
+                                     data-error-container-name="secret_plaintext-mysql_root_password"></div>
                                 <small class="text-muted">
                                     Password for the <code>root</code> user.
                                 </small>
@@ -365,12 +373,14 @@
 
                             <div class="col-12 col-xl form-group">
                                 <label class="form-label"
-                                       for="mysql_database">Database</label>
+                                       for="secret_plaintext-mysql_database">Database</label>
                                 <input type="text" class="form-control" maxlength="64"
-                                       id="mysql_database" name="mysql_database" placeholder=""
-                                       value="" required
-                                       data-error-container="mysql_database" />
-                                <div class="invalid-feedback" data-error-container-name="mysql_database"></div>
+                                       id="secret_plaintext-mysql_database"
+                                       name="secret_plaintext[mysql_database]" placeholder=""
+                                       value=""
+                                       data-error-container="secret_plaintext-mysql_database" />
+                                <div class="invalid-feedback"
+                                     data-error-container-name="secret_plaintext-mysql_database"></div>
                                 <small class="text-muted">
                                     Database to create on init.
                                 </small>
@@ -380,13 +390,14 @@
                         <div class="row">
                             <div class="col-12 col-xl form-group">
                                 <label class="form-label"
-                                       for="mysql_user">User</label>
+                                       for="secret_plaintext-mysql_user">User</label>
                                 <input type="text" class="form-control" maxlength="64"
-                                       id="mysql_user" name="mysql_user" placeholder=""
-                                       value="" required
-                                       data-error-container="mysql_user" />
+                                       id="secret_plaintext-mysql_user"
+                                       name="secret_plaintext[mysql_user]" placeholder=""
+                                       value=""
+                                       data-error-container="secret_plaintext-mysql_user" />
                                 <div class="invalid-feedback"
-                                     data-error-container-name="mysql_user"></div>
+                                     data-error-container-name="secret_plaintext-mysql_user"></div>
                                 <small class="text-muted">
                                     Non-root user.
                                 </small>
@@ -394,12 +405,14 @@
 
                             <div class="col-12 col-xl form-group">
                                 <label class="form-label"
-                                       for="mysql_password">User Password</label>
+                                       for="secret_plaintext-mysql_password">User Password</label>
                                 <input type="text" class="form-control" maxlength="64"
-                                       id="mysql_password" name="mysql_password" placeholder=""
-                                       value="" required
-                                       data-error-container="mysql_password" />
-                                <div class="invalid-feedback" data-error-container-name="mysql_password"></div>
+                                       id="secret_plaintext-mysql_password"
+                                       name="secret_plaintext[mysql_password]" placeholder=""
+                                       value=""
+                                       data-error-container="secret_plaintext-mysql_password" />
+                                <div class="invalid-feedback"
+                                     data-error-container-name="secret_plaintext-mysql_password"></div>
                                 <small class="text-muted">
                                     Password for User.
                                 </small>

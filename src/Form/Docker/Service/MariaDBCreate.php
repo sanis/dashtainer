@@ -26,47 +26,43 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
 
     public $port_used = false;
 
+    public $secret_store;
+
     /**
-     * @DashAssert\NonBlankString(message = "Please enter a root password")
      * @DashAssert\Hostname
      */
     public $mysql_root_password;
 
     /**
-     * @DashAssert\NonBlankString(message = "Please enter a database name")
      * @DashAssert\Hostname
      */
     public $mysql_database;
 
     /**
-     * @DashAssert\NonBlankString(message = "Please enter a MySQL user")
      * @DashAssert\Hostname
      */
     public $mysql_user;
 
     /**
-     * @DashAssert\NonBlankString(message = "Please enter a user password")
      * @DashAssert\Hostname
      */
     public $mysql_password;
 
-    public $credential_store;
-
-    public $secret = [
+    public $secret_docker = [
         'mysql_root_password' => [
-            'name'  => '',
+            'name'  => 'mysql_root_password',
             'value' => '',
         ],
         'mysql_database'      => [
-            'name'  => '',
+            'name'  => 'mysql_database',
             'value' => '',
         ],
         'mysql_user'          => [
-            'name'  => '',
+            'name'  => 'mysql_user',
             'value' => '',
         ],
         'mysql_password'      => [
-            'name'  => '',
+            'name'  => 'mysql_password',
             'value' => '',
         ],
     ];

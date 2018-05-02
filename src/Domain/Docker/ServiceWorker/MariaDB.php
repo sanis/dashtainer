@@ -98,8 +98,14 @@ class MariaDB extends WorkerAbstract implements WorkerInterface
 
     public function getCreateParams(Entity\Docker\Project $project) : array
     {
+        $form = $this->getCreateForm();
+        $form->project = $project;
+
+        $this->generateSecretsNames($form);
+
         return [
-            'bindPort' => $this->getOpenBindPort($project),
+            'bindPort'      => $this->getOpenBindPort($project),
+            'secret_docker' => $form->secret_docker,
         ];
     }
 
