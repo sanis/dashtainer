@@ -82,7 +82,7 @@
                                data-toggle="radio-tab" data-target="#datastore-docker-tab"
                                data-error-container="datastore" />
                         <span class="selectgroup-button selectgroup-button-icon px-7 py-3">
-                            <i class="fe fe-anchor"></i> Docker</span>
+                            <i class="fe fe-anchor"></i> Docker Volume</span>
                     </label>
 
                     <label class="selectgroup-item">
@@ -147,60 +147,269 @@
         <h4 class="mb-3">Database Credentials</h4>
 
         <div class="row">
-            <div class="col-12 col-xl form-group">
-                <label class="form-label"
-                       for="mysql_root_password">Root Password</label>
-                <input type="text" class="form-control" maxlength="64"
-                       id="mysql_root_password" name="mysql_root_password" placeholder=""
-                       value="" required
-                       data-error-container="mysql_root_password" />
-                <div class="invalid-feedback"
-                     data-error-container-name="mysql_root_password"></div>
-                <small class="text-muted">
-                    Password for the <code>root</code> user.
-                </small>
-            </div>
+            <div class="col">
+                <div class="selectgroup" role="tablist">
+                    <label class="selectgroup-item">
+                        <input type="radio" class="selectgroup-input"
+                               id="credential_store-secret" name="credential_store"
+                               value="secret" checked role="tab"
+                               data-toggle="radio-tab" data-target="#credentials-secret-tab"
+                               data-error-container="credential_store" />
+                        <span class="selectgroup-button selectgroup-button-icon px-7 py-3">
+                            <i class="fe fe-anchor"></i> Docker Secrets</span>
+                    </label>
 
-            <div class="col-12 col-xl form-group">
-                <label class="form-label"
-                       for="mysql_database">Database</label>
-                <input type="text" class="form-control" maxlength="64"
-                       id="mysql_database" name="mysql_database" placeholder=""
-                       value="" required
-                       data-error-container="mysql_database" />
-                <div class="invalid-feedback" data-error-container-name="mysql_database"></div>
-                <small class="text-muted">
-                    Database to create on init.
-                </small>
-            </div>
-        </div>
+                    <label class="selectgroup-item">
+                        <input type="radio" class="selectgroup-input"
+                               id="credential_store-plaintext" name="credential_store"
+                               value="plaintext" role="tab"
+                               data-toggle="radio-tab" data-target="#credentials-plaintext-tab"
+                               data-error-container="credential_store" />
+                        <span class="selectgroup-button selectgroup-button-icon px-7 py-3">
+                            <i class="fe fe-file-text"></i> Plain Text</span>
+                    </label>
+                </div>
 
-        <div class="row">
-            <div class="col-12 col-xl form-group">
-                <label class="form-label"
-                       for="mysql_user">User</label>
-                <input type="text" class="form-control" maxlength="64"
-                       id="mysql_user" name="mysql_user" placeholder=""
-                       value="" required
-                       data-error-container="mysql_user" />
-                <div class="invalid-feedback"
-                     data-error-container-name="mysql_user"></div>
-                <small class="text-muted">
-                    Non-root user.
-                </small>
-            </div>
+                <div id="nav-credentials-content" class="tab-content">
+                    <div id="credentials-secret-tab" role="tabpanel"
+                         class="tab-pane show active">
+                        <div class="row form-group">
+                            <div class="col">
+                                <small class="text-muted">
+                                    Credentials will be available as files within your container. Useful when
+                                    other services need this data, like a PHP application needing to connect
+                                    to a database.
+                                </small>
+                            </div>
+                        </div>
 
-            <div class="col-12 col-xl form-group">
-                <label class="form-label"
-                       for="mysql_password">User Password</label>
-                <input type="text" class="form-control" maxlength="64"
-                       id="mysql_password" name="mysql_password" placeholder=""
-                       value="" required
-                       data-error-container="mysql_password" />
-                <div class="invalid-feedback" data-error-container-name="mysql_password"></div>
-                <small class="text-muted">
-                    Password for User.
-                </small>
+                        <fieldset class="form-fieldset bg-transparent border-0">
+                            <div class="row">
+                                <div class="col-12 col-xl form-group">
+                                    <label class="form-label"
+                                           for="secret-mysql_root_password-name">Root Password Secret Name</label>
+                                    <input type="text" class="form-control" maxlength="64"
+                                           id="secret-mysql_root_password-name" name="secret[mysql_root_password][name]"
+                                           placeholder="" value="" required
+                                           data-update-text="secret-mysql_root_password-name-label"
+                                           data-error-container="secret-mysql_root_password" />
+                                    <small class="text-muted">
+                                        Will be available to services at
+                                        <code>/run/secrets/<span
+                                                id="secret-mysql_root_password-name-label">db_root_password</span></code>
+                                    </small>
+                                </div>
+
+                                <div class="col-12 col-xl form-group">
+                                    <label class="form-label"
+                                           for="secret-mysql_root_password">Root Password</label>
+                                    <input type="text" class="form-control" maxlength="64"
+                                           id="secret-mysql_root_password" name="secret[mysql_root_password][value]"
+                                           placeholder="" value="" required
+                                           data-error-container="secret-mysql_root_password" />
+                                    <small class="text-muted">
+                                        Password for the <code>root</code> user.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="invalid-feedback"
+                                         data-error-container-name="secret-mysql_root_password"></div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-fieldset">
+                            <div class="row">
+                                <div class="col-12 col-xl form-group">
+                                    <label class="form-label"
+                                           for="secret-mysql_database-name">Database Secret Name</label>
+                                    <input type="text" class="form-control" maxlength="64"
+                                           id="secret-mysql_database-name" name="secret[mysql_database][name]"
+                                           placeholder="" value="" required
+                                           data-update-text="secret-mysql_database-name-label"
+                                           data-error-container="secret-mysql_database" />
+                                    <small class="text-muted">
+                                        Will be available to services at
+                                        <code>/run/secrets/<span
+                                                id="secret-mysql_database-name-label">mysql_database</span></code>
+                                    </small>
+                                </div>
+
+                                <div class="col-12 col-xl form-group">
+                                    <label class="form-label"
+                                           for="secret-mysql_database-value">Database</label>
+                                    <input type="text" class="form-control" maxlength="64"
+                                           id="secret-mysql_database-value" name="secret[mysql_database][value]"
+                                           placeholder="" value="" required
+                                           data-error-container="secret-mysql_database" />
+                                    <small class="text-muted">
+                                        Database to create on init.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="invalid-feedback"
+                                         data-error-container-name="secret-mysql_database"></div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-fieldset bg-transparent border-0">
+                            <div class="row">
+                                <div class="col-12 col-xl form-group">
+                                    <label class="form-label"
+                                           for="secret-mysql_user-name">User Secret Name</label>
+                                    <input type="text" class="form-control" maxlength="64"
+                                           id="secret-mysql_user-name" name="secret[mysql_user][name]"
+                                           placeholder="" value="" required
+                                           data-update-text="secret-mysql_user-name-label"
+                                           data-error-container="secret-mysql_user" />
+                                    <small class="text-muted">
+                                        Will be available to services at
+                                        <code>/run/secrets/<span
+                                                id="secret-mysql_user-name-label">mysql_user</span></code>
+                                    </small>
+                                </div>
+
+                                <div class="col-12 col-xl form-group">
+                                    <label class="form-label"
+                                           for="secret-mysql_user-value">User</label>
+                                    <input type="text" class="form-control" maxlength="64"
+                                           id="secret-mysql_user-value" name="secret[mysql_user][value]"
+                                           placeholder="" value="" required
+                                           data-error-container="secret-mysql_user" />
+                                    <small class="text-muted">
+                                        Non-root user.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="invalid-feedback"
+                                         data-error-container-name="secret-mysql_user"></div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-fieldset">
+                            <div class="row">
+                                <div class="col-12 col-xl form-group">
+                                    <label class="form-label"
+                                           for="secret-mysql_password-name">User Password Secret Name</label>
+                                    <input type="text" class="form-control" maxlength="64"
+                                           id="secret-mysql_password-name" name="secret[mysql_password][name]"
+                                           placeholder="" value="" required
+                                           data-update-text="secret-mysql_password-name-label"
+                                           data-error-container="secret-mysql_password" />
+                                    <small class="text-muted">
+                                        Will be available to services at
+                                        <code>/run/secrets/<span
+                                                id="secret-mysql_password-name-label">mysql_password</span></code>
+                                    </small>
+                                </div>
+
+                                <div class="col-12 col-xl form-group">
+                                    <label class="form-label"
+                                           for="secret-mysql_password-value">User Password</label>
+                                    <input type="text" class="form-control" maxlength="64"
+                                           id="secret-mysql_password-value" name="secret[mysql_password][value]"
+                                           placeholder="" value="" required
+                                           data-error-container="secret-mysql_password" />
+                                    <small class="text-muted">
+                                        Password for user.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="invalid-feedback"
+                                         data-error-container-name="secret-mysql_password"></div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div id="credentials-plaintext-tab" role="tabpanel"
+                         class="tab-pane">
+                        <div class="row form-group">
+                            <div class="col">
+                                <small class="text-muted">
+                                    Credentials will not be injected into service containers. Any service
+                                    other than this one will need to know the data some other way - most
+                                    likely hardcoded into the application!
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-xl form-group">
+                                <label class="form-label"
+                                       for="mysql_root_password">Root Password</label>
+                                <input type="text" class="form-control" maxlength="64"
+                                       id="mysql_root_password" name="mysql_root_password" placeholder=""
+                                       value="" required
+                                       data-error-container="mysql_root_password" />
+                                <div class="invalid-feedback"
+                                     data-error-container-name="mysql_root_password"></div>
+                                <small class="text-muted">
+                                    Password for the <code>root</code> user.
+                                </small>
+                            </div>
+
+                            <div class="col-12 col-xl form-group">
+                                <label class="form-label"
+                                       for="mysql_database">Database</label>
+                                <input type="text" class="form-control" maxlength="64"
+                                       id="mysql_database" name="mysql_database" placeholder=""
+                                       value="" required
+                                       data-error-container="mysql_database" />
+                                <div class="invalid-feedback" data-error-container-name="mysql_database"></div>
+                                <small class="text-muted">
+                                    Database to create on init.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-xl form-group">
+                                <label class="form-label"
+                                       for="mysql_user">User</label>
+                                <input type="text" class="form-control" maxlength="64"
+                                       id="mysql_user" name="mysql_user" placeholder=""
+                                       value="" required
+                                       data-error-container="mysql_user" />
+                                <div class="invalid-feedback"
+                                     data-error-container-name="mysql_user"></div>
+                                <small class="text-muted">
+                                    Non-root user.
+                                </small>
+                            </div>
+
+                            <div class="col-12 col-xl form-group">
+                                <label class="form-label"
+                                       for="mysql_password">User Password</label>
+                                <input type="text" class="form-control" maxlength="64"
+                                       id="mysql_password" name="mysql_password" placeholder=""
+                                       value="" required
+                                       data-error-container="mysql_password" />
+                                <div class="invalid-feedback" data-error-container-name="mysql_password"></div>
+                                <small class="text-muted">
+                                    Password for User.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="invalid-feedback p-3 mb-2 bg-danger text-white"
+                     data-error-container-name="credential_store"></div>
             </div>
         </div>
 

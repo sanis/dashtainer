@@ -50,6 +50,27 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
      */
     public $mysql_password;
 
+    public $credential_store;
+
+    public $secret = [
+        'mysql_root_password' => [
+            'name'  => '',
+            'value' => '',
+        ],
+        'mysql_database'      => [
+            'name'  => '',
+            'value' => '',
+        ],
+        'mysql_user'          => [
+            'name'  => '',
+            'value' => '',
+        ],
+        'mysql_password'      => [
+            'name'  => '',
+            'value' => '',
+        ],
+    ];
+
     /**
      * @Assert\Callback
      * @param ExecutionContextInterface $context
@@ -59,9 +80,38 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
     {
         parent::validate($context, $payload);
 
+        $this->validationSecret($context);
         $this->validatePort($context);
         $this->validateSystemFile($context);
         $this->validateUserFile($context);
+    }
+
+    protected function validationSecret(ExecutionContextInterface $context)
+    {
+        if ($this->credential_store !== 'secret') {
+            return;
+        }
+
+        foreach ($this->secret as $key => $data) {
+            if (empty($data['name'])) {
+                $context->buildViolation('You must enter a name for this secret file')
+                    ->atPath("secret-{$data['name']}")
+                    ->addViolation();
+            }
+
+            if (empty($data['value'])) {
+                $context->buildViolation('You must enter a value for this secret')
+                    ->atPath("secret-{$data['name']}")
+                    ->addViolation();
+            }
+        }
+    }
+
+    protected function validateCredentials(ExecutionContextInterface $context)
+    {
+        if ($this->credential_store !== 'plaintext') {
+            return;
+        }
     }
 
     protected function validatePort(ExecutionContextInterface $context)
