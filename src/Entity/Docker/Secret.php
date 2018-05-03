@@ -104,6 +104,44 @@ class Secret implements
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param string $file
+     * @return $this
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContents()
+    {
+        return $this->contents;
+    }
+
+    /**
+     * @param string $contents
+     * @return $this
+     */
+    public function setContents($contents)
+    {
+        $this->contents = $contents;
+
+        return $this;
+    }
+
     public function getName() : ?string
     {
         return $this->name;

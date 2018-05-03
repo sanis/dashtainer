@@ -43,11 +43,48 @@ class MariaDB extends WorkerAbstract implements WorkerInterface
 
         $this->serviceRepo->save($service);
 
-        $secretDbRootPw   = new Entity\Docker\Secret();
-        $secretDbRootPw->setName($form->secret['mysql_root_password']['name']);
-        $secretDbName     = new Entity\Docker\Secret();
-        $secretDbUser     = new Entity\Docker\Secret();
+        $slug = $service->getSlug();
+
+        $secretDbRootPw = new Entity\Docker\Secret();
+        $secretDbRootPw->setName("{$slug}-mysql_root_password")
+            ->setFile($form->secret['mysql_root_password']['name'])
+            ->setContents($form->secret['mysql_root_password']['value'])
+            ->setProject($form->project)
+            ->addService($service);
+
+        $secretDbName = new Entity\Docker\Secret();
+        $secretDbName->setName("{$slug}-mysql_database")
+            ->setFile($form->secret['mysql_database']['name'])
+            ->setContents($form->secret['mysql_database']['value'])
+            ->setProject($form->project)
+            ->addService($service);
+
+        $secretDbUser = new Entity\Docker\Secret();
+        $secretDbUser->setName("{$slug}-mysql_user")
+            ->setFile($form->secret['mysql_user']['name'])
+            ->setContents($form->secret['mysql_user']['value'])
+            ->setProject($form->project)
+            ->addService($service);
+
         $secretDbPassword = new Entity\Docker\Secret();
+        $secretDbPassword->setName("{$slug}-mysql_password")
+            ->setFile($form->secret['mysql_password']['name'])
+            ->setContents($form->secret['mysql_password']['value'])
+            ->setProject($form->project)
+            ->addService($service);
+
+        $service->addSecret($secretDbRootPw)
+            ->addSecret($secretDbName)
+            ->addSecret($secretDbUser)
+            ->addSecret($secretDbPassword);
+
+        $this->serviceRepo->save(
+            $secretDbRootPw,
+            $secretDbName,
+            $secretDbUser,
+            $secretDbPassword,
+            $service
+        );
 
         $this->addToPrivateNetworks($service, $form);
 
