@@ -33,14 +33,21 @@ class MariaDB extends WorkerAbstract implements WorkerInterface
         $service->setImage("mariadb:{$version}")
             ->setRestart(Entity\Docker\Service::RESTART_ALWAYS);
 
+        $sec = '/run/secrets/';
         $service->setEnvironments([
-            'MYSQL_ROOT_PASSWORD' => $form->mysql_root_password,
-            'MYSQL_DATABASE'      => $form->mysql_database,
-            'MYSQL_USER'          => $form->mysql_user,
-            'MYSQL_PASSWORD'      => $form->mysql_password,
+            'MYSQL_ROOT_PASSWORD_FILE' => $sec . $form->secret['mysql_root_password']['name'],
+            'MYSQL_DATABASE_FILE'      => $sec . $form->secret['mysql_database']['name'],
+            'MYSQL_USER_FILE'          => $sec . $form->secret['mysql_user']['name'],
+            'MYSQL_PASSWORD_FILE'      => $sec . $form->secret['mysql_password']['name'],
         ]);
 
         $this->serviceRepo->save($service);
+
+        $secretDbRootPw   = new Entity\Docker\Secret();
+        $secretDbRootPw->setName($form->secret['mysql_root_password']['name']);
+        $secretDbName     = new Entity\Docker\Secret();
+        $secretDbUser     = new Entity\Docker\Secret();
+        $secretDbPassword = new Entity\Docker\Secret();
 
         $this->addToPrivateNetworks($service, $form);
 
@@ -104,8 +111,8 @@ class MariaDB extends WorkerAbstract implements WorkerInterface
         $this->generateSecretsNames($form);
 
         return [
-            'bindPort'      => $this->getOpenBindPort($project),
-            'secret_docker' => $form->secret_docker,
+            'bindPort' => $this->getOpenBindPort($project),
+            'secret'   => $form->secret,
         ];
     }
 

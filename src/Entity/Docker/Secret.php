@@ -47,6 +47,19 @@ class Secret implements
     protected $external;
 
     /**
+     * @ORM\Column(name="file", type="string", length=255, nullable=true)
+     * @see https://docs.docker.com/compose/compose-file/#secrets-configuration-reference
+     */
+    protected $file;
+
+    /**
+     * Only used if $file is set
+     *
+     * @ORM\Column(name="contents", type="text", nullable=true)
+     */
+    protected $contents;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Dashtainer\Entity\Docker\Project", inversedBy="secrets")
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
      */
