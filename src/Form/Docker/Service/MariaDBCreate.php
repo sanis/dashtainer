@@ -15,6 +15,13 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
     use DashAssert\SystemFileTrait;
     use DashAssert\UserFileTrait;
 
+    protected const SECRETS_REQUIRED = [
+        'mysql_root_password',
+        'mysql_database',
+        'mysql_user',
+        'mysql_password',
+    ];
+
     /**
      * @DashAssert\NonBlankString(message = "Version must be chosen")
      */
@@ -26,29 +33,7 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
 
     public $port_used = false;
 
-    public $secret_store;
-
-    /**
-     * @DashAssert\Hostname
-     */
-    public $mysql_root_password;
-
-    /**
-     * @DashAssert\Hostname
-     */
-    public $mysql_database;
-
-    /**
-     * @DashAssert\Hostname
-     */
-    public $mysql_user;
-
-    /**
-     * @DashAssert\Hostname
-     */
-    public $mysql_password;
-
-    public $secret_docker = [
+    public $secret = [
         'mysql_root_password' => [
             'name'  => 'mysql_root_password',
             'value' => '',
@@ -76,37 +61,65 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
     {
         parent::validate($context, $payload);
 
-        $this->validationSecret($context);
         $this->validatePort($context);
+        $this->validateSecret($context);
         $this->validateSystemFile($context);
         $this->validateUserFile($context);
     }
 
-    protected function validationSecret(ExecutionContextInterface $context)
+    protected function validateSecret(ExecutionContextInterface $context)
     {
-        if ($this->credential_store !== 'secret') {
-            return;
+        $validator = $context->getValidator();
+
+        $assertSecretName     = new DashAssert\SecretName();
+        $assertNonBlankString = new DashAssert\NonBlankString();
+
+        $nameError  = 'You must enter a name for this secret, Valid characters are a-zA-Z0-9 _ and -';
+        $valueError = 'You must enter a value';
+
+        foreach (static::SECRETS_REQUIRED as $secretName) {
+            if (empty($this->secret[$secretName])) {
+                $context->buildViolation('These fields must be filled in.')
+                    ->atPath("secret-{$secretName}-name,secret-{$secretName}-value")
+                    ->addViolation();
+
+                continue;
+            }
         }
 
-        foreach ($this->secret as $key => $data) {
-            if (empty($data['name'])) {
-                $context->buildViolation('You must enter a name for this secret file')
-                    ->atPath("secret-{$data['name']}")
+        foreach ($this->secret as $secretName => $data) {
+            $error = $validator->validate(
+                $data['name'],
+                $assertSecretName
+            );
+
+            if (count($error) > 0) {
+                $context->buildViolation($nameError)
+                    ->atPath("secret-{$secretName}-name")
                     ->addViolation();
             }
 
-            if (empty($data['value'])) {
-                $context->buildViolation('You must enter a value for this secret')
-                    ->atPath("secret-{$data['name']}")
+            $error = $validator->validate(
+                $data['name'],
+                $assertNonBlankString
+            );
+
+            if (count($error) > 0) {
+                $context->buildViolation($nameError)
+                    ->atPath("secret-{$secretName}-name")
                     ->addViolation();
             }
-        }
-    }
 
-    protected function validateCredentials(ExecutionContextInterface $context)
-    {
-        if ($this->credential_store !== 'plaintext') {
-            return;
+            $error = $validator->validate(
+                $data['value'],
+                $assertNonBlankString
+            );
+
+            if (count($error) > 0) {
+                $context->buildViolation($valueError)
+                    ->atPath("secret-{$secretName}-value")
+                    ->addViolation();
+            }
         }
     }
 

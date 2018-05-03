@@ -47,7 +47,7 @@ abstract class WorkerAbstract implements WorkerInterface
             return;
         }
 
-        foreach ($form->secret_docker as $key => $values) {
+        foreach ($form->secret as $key => $values) {
             $name = $values['name'];
 
             if (!in_array($name, $existingNames)) {
@@ -59,7 +59,7 @@ abstract class WorkerAbstract implements WorkerInterface
                     continue;
                 }
 
-                $form->secret_docker[$key]['name'] = $name . $i;
+                $form->secret[$key]['name'] = $name . $i;
 
                 break;
             }
