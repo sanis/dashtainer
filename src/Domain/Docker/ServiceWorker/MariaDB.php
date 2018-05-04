@@ -45,6 +45,13 @@ class MariaDB extends WorkerAbstract implements WorkerInterface
 
         $slug = $service->getSlug();
 
+        $secretDbHost = new Entity\Docker\Secret();
+        $secretDbHost->setName("{$slug}-mysql_host")
+            ->setFile("./secrets/{$slug}-mysql_host")
+            ->setContents($slug)
+            ->setProject($form->project)
+            ->addService($service);
+
         $secretDbRootPw = new Entity\Docker\Secret();
         $secretDbRootPw->setName("{$slug}-mysql_root_password")
             ->setFile($form->secret['mysql_root_password']['name'])
@@ -73,12 +80,14 @@ class MariaDB extends WorkerAbstract implements WorkerInterface
             ->setProject($form->project)
             ->addService($service);
 
-        $service->addSecret($secretDbRootPw)
+        $service->addSecret($secretDbHost)
+            ->addSecret($secretDbRootPw)
             ->addSecret($secretDbName)
             ->addSecret($secretDbUser)
             ->addSecret($secretDbPassword);
 
         $this->serviceRepo->save(
+            $secretDbHost,
             $secretDbRootPw,
             $secretDbName,
             $secretDbUser,

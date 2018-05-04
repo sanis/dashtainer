@@ -16,6 +16,7 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
     use DashAssert\UserFileTrait;
 
     protected const SECRETS_REQUIRED = [
+        'mysql_host',
         'mysql_root_password',
         'mysql_database',
         'mysql_user',
@@ -34,6 +35,10 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
     public $port_used = false;
 
     public $secret = [
+        'mysql_host' => [
+            'name'  => 'mysql_host',
+            'value' => '',
+        ],
         'mysql_root_password' => [
             'name'  => 'mysql_root_password',
             'value' => '',
@@ -74,7 +79,7 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
         $assertSecretName     = new DashAssert\SecretName();
         $assertNonBlankString = new DashAssert\NonBlankString();
 
-        $nameError  = 'You must enter a name for this secret, Valid characters are a-zA-Z0-9 _ and -';
+        $nameError  = 'You must enter a name for this secret, valid characters are a-zA-Z0-9 _ and -';
         $valueError = 'You must enter a value';
 
         foreach (static::SECRETS_REQUIRED as $secretName) {
@@ -89,7 +94,7 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
 
         foreach ($this->secret as $secretName => $data) {
             $error = $validator->validate(
-                $data['name'],
+                $data['name'] ?? null,
                 $assertSecretName
             );
 
@@ -100,7 +105,7 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
             }
 
             $error = $validator->validate(
-                $data['name'],
+                $data['name'] ?? null,
                 $assertNonBlankString
             );
 
@@ -111,7 +116,7 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
             }
 
             $error = $validator->validate(
-                $data['value'],
+                $data['value'] ?? null,
                 $assertNonBlankString
             );
 
