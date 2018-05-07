@@ -45,7 +45,7 @@ class MariaDB extends WorkerAbstract implements WorkerInterface
 
         $this->serviceRepo->save($service);
 
-        $this->createSecrets($form, $service);
+        $this->createSecrets($service, $form);
 
         $this->addToPrivateNetworks($service, $form);
 
@@ -191,6 +191,8 @@ class MariaDB extends WorkerAbstract implements WorkerInterface
 
         $this->updateDatastore($service, $form);
 
+        $this->updateSecrets($service, $form);
+
         $this->userFilesUpdate($service, $form);
 
         return $service;
@@ -219,8 +221,8 @@ class MariaDB extends WorkerAbstract implements WorkerInterface
     }
 
     protected function createSecrets(
-        Form\Docker\Service\MariaDBCreate $form,
-        Entity\Docker\Service $service
+        Entity\Docker\Service $service,
+        Form\Docker\Service\MariaDBCreate $form
     ) {
         $sec  = '/run/secrets';
         $slug = $service->getSlug();
@@ -318,6 +320,30 @@ class MariaDB extends WorkerAbstract implements WorkerInterface
             $user, $userSS,
             $password, $passwordSS,
             $service
+        );
+    }
+
+    protected function updateSecrets(
+        Entity\Docker\Service $service,
+        Form\Docker\Service\MariaDBCreate $form
+    ) {
+        $secrets = $this->getSecrets($service);
+
+        $mysql_root_password = $secrets['mysql_root_password']->getProjectSecret();
+        $mysql_database      = $secrets['mysql_database']->getProjectSecret();
+        $mysql_user          = $secrets['mysql_user']->getProjectSecret();
+        $mysql_password      = $secrets['mysql_password']->getProjectSecret();
+
+        $mysql_root_password->setContents($form->mysql_root_password);
+        $mysql_database->setContents($form->mysql_database);
+        $mysql_user->setContents($form->mysql_user);
+        $mysql_password->setContents($form->mysql_password);
+
+        $this->serviceRepo->save(
+            $mysql_root_password,
+            $mysql_database,
+            $mysql_user,
+            $mysql_password
         );
     }
 
