@@ -41,7 +41,7 @@ class Version1_0_5 extends FixtureMigrationAbstract
         $this->addSql('
             ALTER TABLE docker_secret
                 ADD file VARCHAR(255) DEFAULT NULL AFTER external,
-                ADD owner_id VARCHAR(8) DEFAULT NULL;
+                ADD owner_id VARCHAR(8) DEFAULT NULL AFTER project_id;
         ');
 
         $this->addSql('
