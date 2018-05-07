@@ -60,19 +60,25 @@ class Secret implements
     protected $contents;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Dashtainer\Entity\Docker\Service")
+     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
+     */
+    protected $owner;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Dashtainer\Entity\Docker\Project", inversedBy="secrets")
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
      */
     protected $project;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Dashtainer\Entity\Docker\Service", mappedBy="secrets")
+     * @ORM\OneToMany(targetEntity="Dashtainer\Entity\Docker\ServiceSecret", mappedBy="project_secret")
      */
-    protected $services;
+    protected $service_secrets;
 
     public function __construct()
     {
-        $this->services = new Collections\ArrayCollection();
+        $this->service_secrets = new Collections\ArrayCollection();
     }
 
     /**
@@ -158,6 +164,22 @@ class Secret implements
         return $this;
     }
 
+    public function getOwner() : ?Service
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param Service $service
+     * @return $this
+     */
+    public function setOwner(Service $service = null)
+    {
+        $this->owner = $service;
+
+        return $this;
+    }
+
     public function getProject() : ?Project
     {
         return $this->project;
@@ -174,32 +196,32 @@ class Secret implements
         return $this;
     }
 
+    public function getSlug() : string
+    {
+        return Transliterator::urlize($this->getName());
+    }
+
     /**
-     * @param Service $service
+     * @param ServiceSecret $serviceSecret
      * @return $this
      */
-    public function addService(Service $service)
+    public function addServiceSecret(ServiceSecret $serviceSecret)
     {
-        $this->services[] = $service;
+        $this->service_secrets[] = $serviceSecret;
 
         return $this;
     }
 
-    public function removeService(Service $service)
+    public function removeServiceSecret(ServiceSecret $serviceSecret)
     {
-        $this->services->removeElement($service);
+        $this->service_secrets->removeElement($serviceSecret);
     }
 
     /**
-     * @return Service[]|Collections\ArrayCollection
+     * @return ServiceSecret[]|Collections\ArrayCollection
      */
-    public function getServices()
+    public function getServiceSecrets()
     {
-        return $this->services;
-    }
-
-    public function getSlug() : string
-    {
-        return Transliterator::urlize($this->getName());
+        return $this->service_secrets;
     }
 }

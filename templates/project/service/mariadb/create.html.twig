@@ -9,11 +9,16 @@
         <div class="row">
             <div class="form-group col">
                 <label class="form-label" for="name">Service Name</label>
-                <input type="text" class="form-control" maxlength="64"
-                       id="name" name="name" placeholder=""
-                       value="{{ serviceName }}" required data-mask-type="dns"
-                       data-update-text="service-name-tag,datastore-local-span,secret-mysql_host-value"
-                       data-error-container="name" />
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">{{ availableAsSecret|raw }}</span>
+                    </div>
+                    <input type="text" class="form-control" maxlength="64"
+                           id="name" name="name" placeholder=""
+                           value="{{ serviceName }}" required data-mask-type="dns"
+                           data-update-text="service-name-tag,datastore-local-span,secret-mysql_host-value"
+                           data-error-container="name" />
+                </div>
                 <div class="invalid-feedback" data-error-container-name="name"></div>
             </div>
         </div>
@@ -159,184 +164,81 @@
             </div>
         </div>
 
-        <fieldset class="form-fieldset bg-transparent border-0">
-            <div class="row">
-                <div class="col-12 col-xl form-group">
-                    <label class="form-label"
-                           for="secret-mysql_host-name">Host Secret Name</label>
+        <div class="row">
+            <div class="col-12 col-xl form-group">
+                <label class="form-label" for="mysql_root_password">Root Password</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">{{ availableAsSecret|raw }}</span>
+                    </div>
                     <input type="text" class="form-control" maxlength="64"
-                           id="secret-mysql_host-name"
-                           name="secret[mysql_host][name]"
-                           placeholder="" value="{{ secret.mysql_host.name }}"
-                           data-update-text="secret-mysql_host-name-label"
-                           data-error-container="secret-mysql_host-name-error" />
-                    <div class="invalid-feedback"
-                         data-error-container-name="secret-mysql_host-name-error"></div>
-                    <small class="text-muted">
-                        Can be made available to other services at
-                        <code>/run/secrets/<span id="secret-mysql_host-name-label"
-                            >{{ secret.mysql_host.name }}</span></code>
-                    </small>
+                       id="mysql_root_password" name="mysql_root_password" placeholder=""
+                       value="" required
+                       data-error-container="mysql_root_password" />
                 </div>
-
-                <div class="col-12 col-xl form-group">
-                    <label class="form-label"
-                           for="secret-mysql_host-value">Host Name</label>
-                    <input type="hidden" name="secret[mysql_host][name]" value="{{ serviceName }}" />
-                    <span id="secret-mysql_host-value" class="form-control text-gray" readonly>{{ serviceName }}</span>
-                    <small class="text-muted">
-                        Value is set from service name.
-                    </small>
-                </div>
+                <div class="invalid-feedback"
+                     data-error-container-name="mysql_root_password"></div>
+                <small class="text-muted">
+                    Password for the <code>root</code> user.
+                </small>
             </div>
-        </fieldset>
 
-        <fieldset class="form-fieldset">
-            <div class="row">
-                <div class="col-12 col-xl form-group">
-                    <label class="form-label"
-                           for="secret-mysql_root_password-name">Root Password Secret Name</label>
+            <div class="col-12 col-xl form-group">
+                <label class="form-label" for="mysql_database">Database</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">{{ availableAsSecret|raw }}</span>
+                    </div>
                     <input type="text" class="form-control" maxlength="64"
-                           id="secret-mysql_root_password-name"
-                           name="secret[mysql_root_password][name]"
-                           placeholder="" value="{{ secret.mysql_root_password.name }}"
-                           data-update-text="secret-mysql_root_password-name-label"
-                           data-error-container="secret-mysql_root_password-name-error" />
-                    <div class="invalid-feedback"
-                         data-error-container-name="secret-mysql_root_password-name-error"></div>
-                    <small class="text-muted">
-                        Can be made available to other services at
-                        <code>/run/secrets/<span id="secret-mysql_root_password-name-label"
-                            >{{ secret.mysql_root_password.name }}</span></code>
-                    </small>
+                           id="mysql_database" name="mysql_database" placeholder=""
+                           value="" required
+                           data-error-container="mysql_database" />
                 </div>
-
-                <div class="col-12 col-xl form-group">
-                    <label class="form-label"
-                           for="secret-mysql_root_password-value">Root Password</label>
-                    <input type="text" class="form-control" maxlength="64"
-                           id="secret-mysql_root_password-value"
-                           name="secret[mysql_root_password][value]"
-                           placeholder="" value=""
-                           data-error-container="secret-mysql_root_password-value-error" />
-                    <div class="invalid-feedback"
-                         data-error-container-name="secret-mysql_root_password-value-error"></div>
-                    <small class="text-muted">
-                        Password for the <code>root</code> user.
-                    </small>
-                </div>
+                <div class="invalid-feedback"
+                     data-error-container-name="mysql_database"></div>
+                <small class="text-muted">
+                    Database to create on init.
+                </small>
             </div>
-        </fieldset>
+        </div>
 
-        <fieldset class="form-fieldset bg-transparent border-0">
-            <div class="row">
-                <div class="col-12 col-xl form-group">
-                    <label class="form-label"
-                           for="secret-mysql_database-name">Database Secret Name</label>
+        <div class="row">
+            <div class="col-12 col-xl form-group">
+                <label class="form-label" for="mysql_user">User</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">{{ availableAsSecret|raw }}</span>
+                    </div>
                     <input type="text" class="form-control" maxlength="64"
-                           id="secret-mysql_database-name"
-                           name="secret[mysql_database][name]"
-                           placeholder="" value="{{ secret.mysql_database.name }}"
-                           data-update-text="secret-mysql_database-name-label"
-                           data-error-container="secret-mysql_database-name-error" />
-                    <div class="invalid-feedback"
-                         data-error-container-name="secret-mysql_database-name-error"></div>
-                    <small class="text-muted">
-                        Can be made available to other services at
-                        <code>/run/secrets/<span id="secret-mysql_database-name-label"
-                            >{{ secret.mysql_database.name }}</span></code>
-                    </small>
+                           id="mysql_user" name="mysql_user" placeholder=""
+                           value="" required
+                           data-error-container="mysql_user" />
                 </div>
-
-                <div class="col-12 col-xl form-group">
-                    <label class="form-label"
-                           for="secret-mysql_database-value">Database</label>
-                    <input type="text" class="form-control" maxlength="64"
-                           id="secret-mysql_database-value"
-                           name="secret[mysql_database][value]"
-                           placeholder="" value=""
-                           data-error-container="secret-mysql_database-value-error" />
-                    <div class="invalid-feedback"
-                         data-error-container-name="secret-mysql_database-value-error"></div>
-                    <small class="text-muted">
-                        Database to create on init.
-                    </small>
-                </div>
+                <div class="invalid-feedback"
+                     data-error-container-name="mysql_user"></div>
+                <small class="text-muted">
+                    Non-root user.
+                </small>
             </div>
-        </fieldset>
 
-        <fieldset class="form-fieldset">
-            <div class="row">
-                <div class="col-12 col-xl form-group">
-                    <label class="form-label"
-                           for="secret-mysql_user-name">User Secret Name</label>
+            <div class="col-12 col-xl form-group">
+                <label class="form-label" for="mysql_password">User Password</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">{{ availableAsSecret|raw }}</span>
+                    </div>
                     <input type="text" class="form-control" maxlength="64"
-                           id="secret-mysql_user-name" name="secret[mysql_user][name]"
-                           placeholder="" value="{{ secret.mysql_user.name }}"
-                           data-update-text="secret-mysql_user-name-label"
-                           data-error-container="secret-mysql_user-name-error" />
-                    <div class="invalid-feedback"
-                         data-error-container-name="secret-mysql_user-name-error"></div>
-                    <small class="text-muted">
-                        Can be made available to other services at
-                        <code>/run/secrets/<span id="secret-mysql_user-name-label"
-                            >{{ secret.mysql_user.name }}</span></code>
-                    </small>
+                           id="mysql_password" name="mysql_password" placeholder=""
+                           value="" required
+                           data-error-container="mysql_password" />
                 </div>
-
-                <div class="col-12 col-xl form-group">
-                    <label class="form-label"
-                           for="secret-mysql_user-value">User</label>
-                    <input type="text" class="form-control" maxlength="64"
-                           id="secret-mysql_user-value"
-                           name="secret[mysql_user][value]"
-                           placeholder="" value=""
-                           data-error-container="secret-mysql_user-value-error" />
-                    <div class="invalid-feedback"
-                         data-error-container-name="secret-mysql_user-value-error"></div>
-                    <small class="text-muted">
-                        Non-root user.
-                    </small>
-                </div>
+                <div class="invalid-feedback"
+                     data-error-container-name="mysql_password"></div>
+                <small class="text-muted">
+                    Password for User.
+                </small>
             </div>
-        </fieldset>
-
-        <fieldset class="form-fieldset bg-transparent border-0">
-            <div class="row">
-                <div class="col-12 col-xl form-group">
-                    <label class="form-label"
-                           for="secret-mysql_password-name">User Password Secret Name</label>
-                    <input type="text" class="form-control" maxlength="64"
-                           id="secret-mysql_password-name"
-                           name="secret[mysql_password][name]"
-                           placeholder="" value="{{ secret.mysql_password.name }}"
-                           data-update-text="secret-mysql_password-name-label"
-                           data-error-container="secret-mysql_password-name-error" />
-                    <div class="invalid-feedback"
-                         data-error-container-name="secret-mysql_password-name-error"></div>
-                    <small class="text-muted">
-                        Can be made available to other services at
-                        <code>/run/secrets/<span id="secret-mysql_password-name-label"
-                            >{{ secret.mysql_password.name }}</span></code>
-                    </small>
-                </div>
-
-                <div class="col-12 col-xl form-group">
-                    <label class="form-label"
-                           for="secret-mysql_password-value">User Password</label>
-                    <input type="text" class="form-control" maxlength="64"
-                           id="secret-mysql_password-value"
-                           name="secret[mysql_password][value]"
-                           placeholder="" value=""
-                           data-error-container="secret-mysql_password-value-error" />
-                    <div class="invalid-feedback"
-                         data-error-container-name="secret-mysql_password-value-error"></div>
-                    <small class="text-muted">
-                        Password for user.
-                    </small>
-                </div>
-            </div>
-        </fieldset>
+        </div>
 
         <hr class="my-6" />
 
