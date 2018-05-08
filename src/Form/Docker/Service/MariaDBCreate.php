@@ -15,14 +15,6 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
     use DashAssert\SystemFileTrait;
     use DashAssert\UserFileTrait;
 
-    protected const SECRETS_REQUIRED = [
-        'mysql_host',
-        'mysql_root_password',
-        'mysql_database',
-        'mysql_user',
-        'mysql_password',
-    ];
-
     /**
      * @DashAssert\NonBlankString(message = "Version must be chosen")
      */
@@ -35,21 +27,25 @@ class MariaDBCreate extends CreateAbstract implements Util\HydratorInterface
     public $port_used = false;
 
     /**
+     * @DashAssert\NonBlankString(message = "Please enter a root password")
      * @DashAssert\Hostname
      */
     public $mysql_root_password;
 
     /**
+     * @DashAssert\NonBlankString(message = "Please enter a database name")
      * @DashAssert\Hostname
      */
     public $mysql_database;
 
     /**
+     * @DashAssert\NonBlankString(message = "Please enter a MariaDB user")
      * @DashAssert\Hostname
      */
     public $mysql_user;
 
     /**
+     * @DashAssert\NonBlankString(message = "Please enter a user password")
      * @DashAssert\Hostname
      */
     public $mysql_password;
