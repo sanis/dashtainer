@@ -23,6 +23,7 @@ class Version1_0_6 extends FixtureMigrationAbstract
 
         $this->migrateMariaDB($serviceRepo, $networkRepo, $secretRepo, $serviceTypeRepo);
         $this->migrateMySQL($serviceRepo, $networkRepo, $secretRepo, $serviceTypeRepo);
+        $this->migratePostgreSQL($serviceRepo, $networkRepo, $secretRepo, $serviceTypeRepo);
     }
 
     public function down(Schema $schema)
@@ -96,6 +97,37 @@ class Version1_0_6 extends FixtureMigrationAbstract
             $service->setEnvironments($env);
 
             $refMethod->invoke($mySQLWorker, $service, $form);
+        }
+    }
+
+    protected function migratePostgreSQL(
+        Repository\Service $serviceRepo,
+        Repository\Network $networkRepo,
+        Repository\Secret $secretRepo,
+        Repository\ServiceType $serviceTypeRepo
+    ) {
+        $psqlType   = $serviceTypeRepo->findBySlug('postgresql');
+        $psqlWorker = new Worker\PostgreSQL($serviceRepo, $networkRepo, $secretRepo, $serviceTypeRepo);
+        $refMethod  = new \ReflectionMethod(Worker\PostgreSQL::class, 'createSecrets');
+        $refMethod->setAccessible(true);
+
+        foreach ($psqlType->getServices() as $service) {
+            $env = $service->getEnvironments();
+
+            $form = new Form\PostgreSQLCreate();
+            $form->postgres_db       = $env['POSTGRES_DB'];
+            $form->postgres_user     = $env['POSTGRES_USER'];
+            $form->postgres_password = $env['POSTGRES_PASSWORD'];
+
+            unset(
+                $env['POSTGRES_DB'],
+                $env['POSTGRES_USER'],
+                $env['POSTGRES_PASSWORD']
+            );
+
+            $service->setEnvironments($env);
+
+            $refMethod->invoke($psqlWorker, $service, $form);
         }
     }
 }
