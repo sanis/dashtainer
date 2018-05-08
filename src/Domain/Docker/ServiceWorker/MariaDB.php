@@ -277,7 +277,7 @@ class MariaDB extends WorkerAbstract implements WorkerInterface
         $user = new Entity\Docker\Secret();
         $user->setName("{$slug}-mysql_user")
             ->setFile("./secrets/{$slug}-mysql_user")
-            ->setContents($form->mysql_database)
+            ->setContents($form->mysql_user)
             ->setProject($service->getProject())
             ->setOwner($service);
 
