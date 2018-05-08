@@ -159,13 +159,6 @@ class MariaDB extends WorkerAbstract implements WorkerInterface
         Entity\Docker\Service $service,
         $form
     ) : Entity\Docker\Service {
-        $service->setEnvironments([
-            'MYSQL_ROOT_PASSWORD' => $form->mysql_root_password,
-            'MYSQL_DATABASE'      => $form->mysql_database,
-            'MYSQL_USER'          => $form->mysql_user,
-            'MYSQL_PASSWORD'      => $form->mysql_password,
-        ]);
-
         $this->addToPrivateNetworks($service, $form);
 
         $portMetaData = $form->port_confirm ? [$form->port] : [];
