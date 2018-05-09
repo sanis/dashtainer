@@ -43,7 +43,9 @@ DASHTAINER.dataMask = require('./dataMask');
 $(document).ready(function() {
     require('./formAjax');
     require('./addBlock');
+    require('./addElement');
     require('./removeBlock');
+    require('./removeElement');
     require('./codeFromRemote');
     require('./card');
 

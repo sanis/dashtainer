@@ -264,3 +264,8 @@ ul.nav.nav-tabs {
 .card.hlt:hover {
     cursor: default;
 }
+
+.selectgroup-item.dark .selectgroup-input:checked + .selectgroup-button {
+    background: $primary;
+    color: #fff;
+}

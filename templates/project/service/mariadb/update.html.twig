@@ -32,6 +32,120 @@
 
         {% include '@Dashtainer/project/service/snippets/networks_update.html.twig' %}
 
+        <hr class="my-6" />
+
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-icon alert-warning" role="alert">
+                    <i class="fe fe-bell mr-2" aria-hidden="true"></i>
+                    Services must be granted access to Secrets to use them.
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card border-0 mb-0">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <strong>Owned Secrets</strong>
+                        </h3>
+                        <div class="card-options">
+                            <a class="nav-link text-primary"
+                               data-toggle="add-element"
+                               data-target="#owned_secrets-container"
+                               href="{{ path('project.service.block-add-secret.get', {
+                                   'projectId': project.id,
+                               }) }}"><i
+                                    class="fe fe-plus"></i> Create Secret</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-vcenter">
+                            <thead>
+                            <tr>
+                                <th class="w-50">Name</th>
+                                <th class="w-50">Value</th>
+                                <th class="w-1"></th>
+                            </tr>
+                            </thead>
+                            <tbody id="owned_secrets-container">
+                            {% for secret in allSecrets %}
+                                {% include '@Dashtainer/project/service/snippets/secret-owned.html.twig' %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card border-0">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <strong>Grant Secrets</strong>
+                        </h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-vcenter">
+                            <thead>
+                            <tr>
+                                <th class="w-25">Name</th>
+                                <th>Owner</th>
+                                <th class="w-50">Target Filename</th>
+                                <th class="w-1"></th>
+                                <th class="w-1"></th>
+                            </tr>
+                            </thead>
+                            <tbody id="grant_secrets-container">
+                            {% for secret in allSecrets %}
+                                <tr id="grant_secrets-{{ secret.id }}-row">
+                                    <td>{{ secret.name }}</td>
+                                    <td>{{ secret.owner.name }}</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><em data-toggle="tooltip"
+                                                   title="Will be available at /run/secrets/{name}">/run/secrets/</em></span>
+                                            </div>
+                                            <input type="text" class="form-control" maxlength="64"
+                                                   id="grant_secrets-{{ secret.id }}-target"
+                                                   name="grant_secrets[{{ secret.id }}][target]" placeholder=""
+                                                   value="" required data-mask-type="secret"
+                                                   data-error-container="grant_secrets-{{ secret.id }}-target-error" />
+                                        </div>
+
+                                        <div class="invalid-feedback p-3 mb-2 bg-danger text-white"
+                                             data-error-container-name="grant_secrets-{{ secret.id }}-target-error"></div>
+                                    </td>
+                                    <td>
+                                        <div class="selectgroup">
+                                            <label class="selectgroup-item dark mb-0">
+                                                <input type="checkbox" class="selectgroup-input"
+                                                       id="grant_secrets-{{ secret.id }}-grant"
+                                                       name="grant_secrets[{{ secret.id }}][grant]"
+                                                       value="{{ secret.id }}" />
+                                                <span class="selectgroup-button">Grant</span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td><a href="#" class="btn btn-outline-danger btn-sm"
+                                           data-toggle="delete-element"
+                                           data-target="#grant_secrets-{{ secret.id }}-row"><i class="fe fe-x"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-6" />
+
         <div class="row">
             <div class="col-6">
                 <label class="form-label" for="port">Bind Port</label>

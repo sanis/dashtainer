@@ -105,44 +105,4 @@ class Secret implements Repository\ObjectPersistInterface
             'project' => $project,
         ]);
     }
-
-    /**
-     * @param Entity\Docker\Service $service
-     * @return Entity\Docker\Secret[]
-     */
-    public function findByService(Entity\Docker\Service $service) : array
-    {
-        $qb = $this->em->createQueryBuilder()
-            ->select('s')
-            ->from('Dashtainer:Docker\Secret', 's')
-            ->where(':service MEMBER OF s.services')
-            ->andWhere('s.project = :project');
-
-        $qb->setParameters([
-            'service' => $service,
-            'project' => $service->getProject(),
-        ]);
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @param Entity\Docker\Service $service
-     * @return Entity\Docker\Secret[]
-     */
-    public function findByNotService(Entity\Docker\Service $service) : array
-    {
-        $qb = $this->em->createQueryBuilder()
-            ->select('s')
-            ->from('Dashtainer:Docker\Secret', 's')
-            ->where(':service NOT MEMBER OF s.services')
-            ->andWhere('s.project = :project');
-
-        $qb->setParameters([
-            'service' => $service,
-            'project' => $service->getProject(),
-        ]);
-
-        return $qb->getQuery()->getResult();
-    }
 }

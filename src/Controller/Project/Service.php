@@ -28,6 +28,9 @@ class Service extends Controller
     /** @var Repository\Docker\Project */
     protected $dProjectRepo;
 
+    /** @var Repository\Docker\Secret */
+    protected $dSecretRepo;
+
     /** @var Repository\Docker\Service */
     protected $dServiceRepo;
 
@@ -45,6 +48,7 @@ class Service extends Controller
         Domain\Docker\Service $dServiceDomain,
         Repository\Docker\Network $dNetworkRepo,
         Repository\Docker\Project $dProjectRepo,
+        Repository\Docker\Secret $dSecretRepo,
         Repository\Docker\Service $dServiceRepo,
         Repository\Docker\ServiceCategory $dServiceCatRepo,
         Repository\Docker\ServiceType $dServiceTypeRepo,
@@ -55,6 +59,7 @@ class Service extends Controller
 
         $this->dNetworkRepo     = $dNetworkRepo;
         $this->dProjectRepo     = $dProjectRepo;
+        $this->dSecretRepo      = $dSecretRepo;
         $this->dServiceRepo     = $dServiceRepo;
         $this->dServiceCatRepo  = $dServiceCatRepo;
         $this->dServiceTypeRepo = $dServiceTypeRepo;
@@ -126,6 +131,26 @@ class Service extends Controller
                 'tab'     => $blockTab->getContent(),
                 'content' => $blockContent->getContent(),
             ],
+        ], AjaxResponse::HTTP_OK);
+    }
+
+    /**
+     * @Route(name="project.service.block-add-secret.get",
+     *     path="/project/{projectId}/service/block-add-secret",
+     *     methods={"GET"}
+     * )
+     * @return AjaxResponse
+     */
+    public function getBlockAddSecret() : AjaxResponse
+    {
+        $template = '@Dashtainer/project/service/snippets/secret-add.html.twig';
+        $rendered = $this->render($template, [
+            'id' => uniqid(),
+        ]);
+
+        return new AjaxResponse([
+            'type' => AjaxResponse::AJAX_SUCCESS,
+            'data' => $rendered->getContent(),
         ], AjaxResponse::HTTP_OK);
     }
 
@@ -347,6 +372,7 @@ class Service extends Controller
         }
 
         $nonJoinedNetworks = $this->dNetworkRepo->findByNotService($service);
+        $allSecrets        = $this->dSecretRepo->findAllByProject($project);
 
         $serviceType = $service->getType();
         $template    = sprintf('@Dashtainer/project/service/%s/update.html.twig',
@@ -359,6 +385,7 @@ class Service extends Controller
             'service'           => $service,
             'project'           => $project,
             'nonJoinedNetworks' => $nonJoinedNetworks,
+            'allSecrets'        => $allSecrets,
             'serviceCategories' => $this->dServiceCatRepo->findAll(),
         ], $params));
     }
